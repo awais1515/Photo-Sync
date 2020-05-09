@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".ActivityFileSyncController">
+    <LinearLayout
+        android:id="@+id/ll0"
+        android:layout_weight="1"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+
+            android:id="@+id/ivIcon"
+            android:src="@drawable/ic_cloud"
+            android:padding="2dp"
+            android:layout_gravity="center"
+            android:background="#4CAF50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_status"
+            android:text="AutoSync"
+            android:textSize="9sp"
+            android:layout_gravity="center"
+            android:textColor="#4F4F4F"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/ll0"
+        android:id="@+id/ll1"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Last Sync: "
+            android:textSize="14sp"
+            android:textColor="@color/colorGrey"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"></TextView>
+
+        <TextView
+            android:id="@+id/tvLastSyncTime"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/colorDarkGreen"
+            android:text="Not synced yet"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"></TextView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="2dp"
+        android:id="@+id/ll2"
+        android:layout_below="@id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="No of files synced: "
+            android:textSize="14sp"
+            android:textColor="@color/colorGrey"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"></TextView>
+
+        <TextView
+            android:id="@+id/tvNoOfFilesSynced"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:text="NA"
+            android:textColor="@color/colorDarkGreen"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:id="@+id/ll3"
+        android:layout_below="@id/ll2"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Synced File Names: "
+            android:textSize="14sp"
+            android:textColor="@color/colorGrey"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"></TextView>
+        <ScrollView
+            android:layout_marginTop="5dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tvSyncedFilePaths"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorDarkGreen"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"></TextView>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnStartService"
+        android:text="Start Service"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnStopService"
+        android:text="Stop Service"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSync"
+            android:text="Sync Now"
+            android:layout_width="120dp"
+            android:layout_height="50dp"/>
+
+
+    </LinearLayout>
+</RelativeLayout>
