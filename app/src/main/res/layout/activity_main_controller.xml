@@ -1,6 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@color/colorBG"
+        android:padding="15dp">
+        <TextView
+            android:id="@+id/txt_st"
+            style="@style/Text_view_1"
+            android:text="Sync Time:"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_st"
+            android:layout_alignBaseline="@id/txt_st"/>
+
+        <TextView
+            android:id="@+id/txt_ps"
+            style="@style/Text_view_1"
+            android:text="Photo Synced:"
+            android:layout_below="@id/txt_st"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_ps"
+            android:layout_alignBaseline="@id/txt_ps"/>
+
+        <TextView
+            android:id="@+id/txt_sp"
+            style="@style/Text_view_1"
+            android:text="Sync Speed MB/s:"
+            android:layout_below="@id/txt_ps"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_sp"
+            android:layout_alignBaseline="@id/txt_sp"/>
+
+        <TextView
+            android:id="@+id/txt_gbs"
+            style="@style/Text_view_1"
+            android:text="GB Synced:"
+            android:layout_below="@id/txt_sp"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_gbs"
+            android:layout_alignBaseline="@id/txt_gbs"/>
+
+        <TextView
+            android:id="@+id/txt_status"
+            style="@style/Text_view_1"
+            android:text="Status:"
+            android:layout_below="@id/txt_gbs"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_status"
+            android:layout_alignBaseline="@id/txt_status"/>
+
+        <TextView
+            android:id="@+id/txt_sf"
+            style="@style/Text_view_1"
+            android:text="Skiped Files:"
+            android:layout_below="@id/txt_status"/>
+        <TextView
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_sf"
+            android:layout_alignBaseline="@id/txt_sf"/>
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:padding="10dp"
+            android:layout_centerInParent="true">
+            <TextView
+                android:id="@+id/txt_bt1"
+                style="@style/Bar_Textview"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:text="39%"/>
+            <TextView
+                android:id="@+id/txt_bt2"
+                style="@style/Bar_Textview"
+                android:text="running"
+                android:layout_marginLeft="50dp"
+                android:layout_alignBaseline="@id/txt_bt1"
+                android:layout_toRightOf="@id/txt_bt1"/>
+            <TextView
+                android:id="@+id/txt_bt3"
+                style="@style/Bar_Textview"
+                android:text="30/450"
+                android:layout_marginRight="50dp"
+                android:layout_toLeftOf="@id/txt_bt4"/>
+            <TextView
+                android:id="@+id/txt_bt4"
+                style="@style/Bar_Textview"
+                android:text="3:23min"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"/>
+
+            <ProgressBar
+                android:id="@+id/probar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_bt1"
+                android:layout_margin="5dp"
+                android:background="@color/colorBG"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="complete"
+                android:textColor="@color/colorGreen"
+                android:layout_below="@id/probar"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rl1"
+            >
+            <TextView
+                android:id="@+id/txt_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTxt1"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp"
+                android:text="+649761762740"
+                android:layout_centerHorizontal="true"/>
+            <Button
+                android:id="@+id/btn_choose"
+                style="@style/Btn_Tv"
+                android:text="Choose Folder"
+                android:layout_below="@id/txt_num"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"/>
+            <Button
+                android:id="@+id/btn_auto"
+                style="@style/Btn_Tv"
+                android:text="Autosync On/Off"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/btn_choose"
+                android:layout_alignParentLeft="true"/>
+            <Button
+                android:id="@+id/btn_manual"
+                style="@style/Btn_Tv"
+                android:text="Manual Sync"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/btn_choose"
+                android:layout_alignParentRight="true"/>
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

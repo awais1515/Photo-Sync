@@ -6,4 +6,12 @@
     <color name="colorGreen">#3DEC44</color>
     <color name="colorDarkGreen">#279B2C</color>
     <color name="colorGrey">#808080</color>
+
+
+    <color name="colorBG">#491976D2</color>
+    <color name="colorTxt1">#145595</color>
+    <color name="colorBtn">#B50288D1</color>
+    <color name="colorWhite">#ffffff</color>
+
+
 </resources>
