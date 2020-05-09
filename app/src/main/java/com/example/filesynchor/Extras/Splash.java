@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.filesynchor.R;
 import com.example.filesynchor.SyncFileUtility;
 
