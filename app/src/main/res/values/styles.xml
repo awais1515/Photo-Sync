@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,7 +10,7 @@
     <style name="Text_view_1">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">3dp</item>
         <item name="android:textColor">@color/colorTxt1</item>
@@ -19,9 +19,9 @@
     <style name="Text_view_2">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">22sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorTxt1</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:text">NA</item>
     </style>
@@ -35,12 +35,12 @@
     <style name="Btn_Tv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="textAllCaps">false</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
         <item name="android:background">@drawable/rec_shape</item>
 
     </style>

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorBtn"
-    android:elevation="4dp">
-
-    
-
-</androidx.appcompat.widget.Toolbar>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/colorTxt1"
+    android:elevation="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:layout_marginLeft="15dp"
+        android:text="Photo Sync"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

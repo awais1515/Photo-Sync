@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorBG"
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+
+        android:padding="15dp">
+        <TextView
+            android:id="@+id/txt_st"
+            style="@style/Text_view_1"
+            android:text="Sync Time:"/>
+        <TextView
+            android:id="@+id/tvLastSyncTime"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_st"
+            android:layout_alignBaseline="@id/txt_st"/>
+
+        <LinearLayout
+            android:id="@+id/ll4"
+            android:gravity="center"
+            android:layout_below="@id/txt_st"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/txt_ps"
+                style="@style/Text_view_1"
+                android:text="Synced Files:"/>
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tvNoOfFilesSynced"
+                style="@style/Text_view_2" />
+            <!--<Button
+                android:id="@+id/btnShare"
+                android:text="Share to LightRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>-->
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/txt_sp"
+            style="@style/Text_view_1"
+            android:text="Sync Speed MB/s:"
+            android:layout_below="@id/ll4"/>
+        <TextView
+            android:id="@+id/tv_sync_speed"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_sp"
+            android:layout_alignBaseline="@id/txt_sp"/>
+
+        <TextView
+            android:id="@+id/txt_gbs"
+            style="@style/Text_view_1"
+            android:text="GB Synced:"
+            android:layout_below="@id/txt_sp"/>
+        <TextView
+            android:id="@+id/tvSyncedDataAmount"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_gbs"
+            android:layout_alignBaseline="@id/txt_gbs"/>
+
+        <TextView
+            android:id="@+id/txt_sd"
+            style="@style/Text_view_1"
+            android:text="Sync Duration:"
+            android:layout_below="@id/txt_gbs"/>
+        <TextView
+            android:id="@+id/tv_sync_duration"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_sd"
+            android:layout_alignBaseline="@id/txt_sd"/>
+
+        <TextView
+            android:id="@+id/txt_status"
+            style="@style/Text_view_1"
+            android:text="Status:"
+            android:layout_below="@id/txt_sd"/>
+        <TextView
+            android:id="@+id/tv_status"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_status"
+            android:layout_alignBaseline="@id/txt_status"/>
+
+        <TextView
+            android:id="@+id/txt_sf"
+            style="@style/Text_view_1"
+            android:text="Skiped Files:"
+            android:layout_below="@id/txt_status"/>
+        <TextView
+            android:id="@+id/tvNoOfSkippedFiles"
+            style="@style/Text_view_2"
+            android:layout_toRightOf="@id/txt_sf"
+            android:layout_alignBaseline="@id/txt_sf"/>
+
+        <LinearLayout
+            android:id="@+id/ll5"
+            android:gravity="center"
+            android:layout_below="@id/txt_sf"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/txt_light_roon"
+                style="@style/Text_view_1"
+                android:text="Ready for Lightroom:"/>
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tvReadyToShare"
+                style="@style/Text_view_2" />
+            <Button
+                android:id="@+id/btnShare"
+                android:text="Share Now"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:visibility="invisible"
+            android:id="@+id/rlProgressPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:padding="10dp"
+            android:elevation="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/ll5">
+            <TextView
+                android:id="@+id/tv_percentage"
+                style="@style/Bar_Textview"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:text="0%"/>
+            <TextView
+                android:id="@+id/tv_copying"
+                style="@style/Bar_Textview"
+                android:text="copying"
+                android:layout_marginLeft="50dp"
+                android:layout_alignBaseline="@id/tv_percentage"
+                android:layout_toRightOf="@id/tv_percentage"/>
+            <TextView
+                android:id="@+id/tv_copied_files_count"
+                style="@style/Bar_Textview"
+                android:text="30/450"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"/>
+            <!--<TextView
+                android:id="@+id/txt_bt4"
+                style="@style/Bar_Textview"
+                android:text="3:23min"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"/>-->
+
+            <ProgressBar
+                android:id="@+id/probar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:progress="0"
+                android:progressDrawable="@drawable/custom_progress"
+                android:layout_height="25dp"
+                android:layout_below="@id/tv_percentage"
+                android:layout_margin="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_completed"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completed"
+                android:textColor="@color/colorGreen"
+                android:layout_below="@id/probar"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlProgressPanel">
+            <TextView
+                android:id="@+id/tvFolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTxt1"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp"
+                android:text="+649761762740"
+                android:layout_centerHorizontal="true"/>
+            <Button
+                android:id="@+id/btn_choose_folder"
+                android:layout_width="250dp"
+                style="@style/Btn_Tv"
+                android:text="Choose Folder"
+                android:layout_below="@id/tvFolder"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/btn_auto_sync"
+                style="@style/Btn_Tv"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:text="Autosync On/Off" />
+
+            <Button
+                android:id="@+id/btn_manual_sync"
+                style="@style/Btn_Tv"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="Manual Sync" />
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.filesynchor;
 
+import android.icu.text.DecimalFormat;
 import android.os.Environment;
 import android.util.Log;
 
@@ -9,18 +10,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.example.filesynchor.App.TAG;
 
 public class SyncFileUtility {
 
-    private static final String dstFolder = Environment.getExternalStorageDirectory().getAbsolutePath()+"/AutoSync Eliaz/";
+    private static final String dstFolder = SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER);
     private static final String rootFolder ="/storage/";
     private static String sdCardPath;
+    private static SyncProgress syncProgress;
+    private static ArrayList<String> fileNames = new ArrayList<>();
+    private static int totalFiles,copiedFiles,skippedFiles = 0;
+    private static long copiedBytes = 0;
 
-
-    public  static void  syncFolder(){
+    public  static void  syncFolder(SyncProgress syncProgress){
+        SyncFileUtility.syncProgress = syncProgress;
         Log.d(TAG,"SyncFolder is called");
         File directory = new File(dstFolder);
         if(!directory.exists()){
@@ -30,28 +36,33 @@ public class SyncFileUtility {
             Log.d(TAG,"Directory Already Present");
         }
 
-        SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,0);
-        SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"");
-        //before sync start
+
         String sdCardPath = getSdCardStoragePath();
         if(isSourceReadable()){
-            copyFileOrDirectory(sdCardPath,dstFolder);
+            //before sync start
+            totalFiles = 0;copiedFiles = 0;copiedBytes=0;skippedFiles=0;
+            Date startTime = new Date();
+            fileNames.clear();
+            countFiles(sdCardPath);
+            App.showLog(totalFiles+"");
+            if(totalFiles==0){
+                syncProgress.onProgressUpdate(copiedFiles,totalFiles);
+            }else {
+                SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"");
+                copyFileOrDirectory(sdCardPath);
+            }
             //after sync
-            String timeStamp = new SimpleDateFormat("MMMM dd,yyyy HH:mm:ss").format(new Date());
-            Log.d(TAG,"Time Started Sync: "+timeStamp);
-            SharedPref.write(SharedPref.KEY_LAST_SYNC_TIME,timeStamp);
-            if(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,0)==0)
-                SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"All the files are already upto date");
+            saveResult(startTime,copiedFiles,totalFiles,copiedBytes);
         }
 
 
 
 
     }
-    private static void copyFileOrDirectory(String srcDir, String dstDir) {
+    private static void copyFileOrDirectory(String srcDir) {
         try {
             File src = new File(srcDir);
-            File dst = new File(dstDir,src.getName());
+
 
             if (src.isDirectory()) {
               //  Log.d(TAG,"Source is Directory  "+src.getAbsolutePath());
@@ -59,15 +70,14 @@ public class SyncFileUtility {
                 int filesLength = files.length;
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
-                    String dst1 = dst.getPath();
-
-                    copyFileOrDirectory(src1, dst1);
+                    copyFileOrDirectory(src1);
                 }
             } else {
                // Log.d(TAG,"Source is a File "+src.getAbsolutePath());
-                //if(src.getAbsolutePath().endsWith(".jpg")||src.getAbsolutePath().endsWith(".png"))
+                //if(src.getAbsolutePath().endsWith(".jpg")||src.getAbsolutePath().endsWith(".png")||src.getAbsolutePath().endsWith(".CR3"))
                 if(src.getAbsolutePath().endsWith(".CR3"))
-                copyFile(src, dst);
+                    if(!src.isHidden())
+                        copyFile(src);
             }
         } catch (Exception e) {
             Log.d(TAG,"Source isn't a file or Directory...May be not available" + e.getMessage());
@@ -75,11 +85,12 @@ public class SyncFileUtility {
         }
     }
 
-    private static void copyFile(File sourceFile, File destFile) throws IOException {
-        Log.d(TAG,"copy method called    source path: "+sourceFile.getAbsolutePath()+"  destination path: "+destFile.getAbsolutePath());
-        if (!destFile.getParentFile().exists())
-            destFile.getParentFile().mkdirs();
+    private static void copyFile(File sourceFile) throws IOException {
 
+        /*if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();*/
+        File destFile = new File(dstFolder,sourceFile.getName());
+        Log.d(TAG,"copy method called    source path: "+sourceFile.getAbsolutePath()+"  destination path: "+destFile.getAbsolutePath());
 
         if (!destFile.exists()||destFile.length()<sourceFile.length()) {
             destFile.createNewFile();
@@ -89,19 +100,20 @@ public class SyncFileUtility {
                 source = new FileInputStream(sourceFile).getChannel();
                 destination = new FileOutputStream(destFile).getChannel();
                 destination.transferFrom(source, 0, source.size());
-
-                /*final long blockSize = 1024;
+                Log.d("abcd", "Copied: " + destFile.getAbsolutePath());
+                copiedFiles++;
+                copiedBytes+=destFile.length();
+                syncProgress.onProgressUpdate(copiedFiles,totalFiles);
+                /*final long blockSize = 2048;
                 long position = 0;
                 while (destination.transferFrom(source, position, blockSize) > 0) {
+                    destination.transferFrom(source,position,blockSize);
                     position += blockSize;
                 }*/
 
-
-
-                Log.d("abcd", "Copied: " + destFile.getAbsolutePath());
-                SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + 1);
-                String fileNo = SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + ") ";
-                SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS, SharedPref.read(SharedPref.KEY_LAST_SYNC_FILE_PATHS, "") + fileNo + "  " + destFile.getName() + "\n");
+                //SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + 1);
+                //String fileNo = SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + ") ";
+                SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS, SharedPref.read(SharedPref.KEY_LAST_SYNC_FILE_PATHS, "") + destFile.getAbsolutePath() + "\n");
             } finally {
                 if (source != null) {
                     source.close();
@@ -150,4 +162,96 @@ public class SyncFileUtility {
         return files;
 
     }
+    private static void saveResult(Date startTime,int copiedFiles,int totalFiles,long copiedBytes){
+        double syncDuration =getTimeDifference(startTime,new Date());
+        String timeStamp = new SimpleDateFormat("MMMM dd,yyyy HH:mm:ss").format(new Date());
+        Log.d(TAG,"Time Started Sync: "+timeStamp);
+        SharedPref.write(SharedPref.KEY_LAST_SYNC_TIME,timeStamp);
+        SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,copiedFiles+"");
+        SharedPref.write(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,String.format("%.2f",(float)copiedBytes/1024/1024/1024) +" GB");
+        SharedPref.write(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,skippedFiles+"");
+        if(totalFiles==0){
+            SharedPref.write(SharedPref.KEY_LAST_SYNC_SPEED,0+" Mb/s");
+            SharedPref.write(SharedPref.KEY_LAST_SYNC_DURATION,0+" seconds");
+        }
+        else {
+            if(syncDuration<=0)
+                SharedPref.write(SharedPref.KEY_LAST_SYNC_SPEED,copiedBytes/1024/1024+" Mb/s");
+            else{
+                long speed = copiedBytes/1024/1024/(int)syncDuration;
+                SharedPref.write(SharedPref.KEY_LAST_SYNC_SPEED,speed +" Mb/s");
+            }
+
+            SharedPref.write(SharedPref.KEY_LAST_SYNC_DURATION,getDuration(syncDuration));
+            App.showLog(syncDuration+"");
+            Log.d(TAG,getDuration(syncDuration));
+        }
+
+        if(totalFiles==copiedFiles)
+        SharedPref.write(SharedPref.KEY_LAST_SYNC_STATUS,"Completed");
+        else
+            SharedPref.write(SharedPref.KEY_LAST_SYNC_STATUS,"Incomplete");
+
+
+
+    }
+    private static void countFiles(String srcDir) {
+        try {
+            File src = new File(srcDir);
+            if (src.isDirectory()) {
+                //  Log.d(TAG,"Source is Directory  "+src.getAbsolutePath());
+                String files[] = src.list();
+                int filesLength = files.length;
+                for (int i = 0; i < filesLength; i++) {
+                    String src1 = (new File(src, files[i]).getPath());
+                    countFiles(src1);
+                }
+            } else {
+                // Log.d(TAG,"Source is a File "+src.getAbsolutePath());
+                //if(src.getAbsolutePath().endsWith(".jpg")||src.getAbsolutePath().endsWith(".png")||src.getAbsolutePath().endsWith(".CR3"))
+                if(src.getAbsolutePath().endsWith(".CR3"))
+                    if(!src.isHidden())
+                    {
+                        File dst = new File(dstFolder,src.getName());
+                        if (!dst.exists()||dst.length()<src.length()){
+                            if(!fileNames.contains(src.getName()))
+                            {
+                                totalFiles++;
+                                fileNames.add(src.getName());
+                            }
+                        }
+                        else
+                        {
+                            skippedFiles++;
+                        }
+
+                    }
+
+            }
+        } catch (Exception e) {
+            Log.d(TAG,"Source isn't a file or Directory...May be not available" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    private static double getTimeDifference(Date startTime,Date endTime){
+        long difference =  endTime.getTime()-startTime.getTime();
+        App.showLog(difference+"");
+        return difference/1000;
+    }
+    private static String getDuration(double duration){
+        if(duration>=60){
+            int min = (int)duration/60;
+            int sec = (int)duration%60;
+            return min+" minute "+sec+" second";
+        }
+        else {
+            if(duration<0){
+                return String.format("%.1f", duration +"second");
+            }
+            else {
+                return ((int) duration)+" second";
+            }
+        }
+    }
+
 }

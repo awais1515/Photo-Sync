@@ -51,83 +51,14 @@ public class Splash extends AppCompatActivity {
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // SyncFileUtility.syncFolder();
+
 
             }
         });
 
-       /* UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-
-        PendingIntent permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-        registerReceiver(usbReceiver, filter);
-        Collection<UsbDevice> usbDeviceList = usbManager.getDeviceList().values();
-        if(usbManager.getDeviceList().values().iterator().hasNext()){
-           // usbManager.requestPermission(usbManager.getDeviceList().values().iterator().next(), permissionIntent);
-        }*/
-       // tvDeviceInfo.setText(ExternalStorage.getSdCardPath());
-        /*Map<String, File> externalLocations = ExternalStorage.getAllStorageLocations();
-        File sdCard = externalLocations.get(ExternalStorage.SD_CARD);
-        File externalSdCard = externalLocations.get(ExternalStorage.EXTERNAL_SD_CARD);*/
-
 
     }
 
-    public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
-                return true;
-            } else {
 
-                Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
-            loadDirectories();
-        }
-        else {
-            isStoragePermissionGranted();
-        }
-    }
-
-    private void loadDirectories(){
-        File f = new File("/storage/");
-        //File f = new File("/storage/self");
-        f.getAbsolutePath();
-        //File f = new File("/storage/256f-1435/");
-        // Check if the specified file
-        // Exists or not
-        String files="SD Card Content: "+f.getAbsolutePath()+"\n\n\n";
-        if (f.exists()){
-            for(String path: f.list()){
-                files+=path+"\n";
-            }
-            tvDeviceInfo.setText(files);
-        }
-        else
-            tvDeviceInfo.setText("Path not found");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(isStoragePermissionGranted()){
-            loadDirectories();
-        }
-    }
 
 }

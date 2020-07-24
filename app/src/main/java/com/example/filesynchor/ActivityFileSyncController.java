@@ -78,7 +78,7 @@ public class ActivityFileSyncController extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                                SyncFileUtility.syncFolder();
+                                //SyncFileUtility.syncFolder();
                                 sendLocalBroadcast();
                             }
                         }).start();
@@ -155,7 +155,7 @@ public class ActivityFileSyncController extends AppCompatActivity {
     private void loadSharedPreferenceData(){
         tvLastSyncTime.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_TIME,"Not synced yet"));
         tvSyncedFilePaths.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"No Files Synced"));
-        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,0)+"");
+        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,"0"));
     }
 
     @Override
