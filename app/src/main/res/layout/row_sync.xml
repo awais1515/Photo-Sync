@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorWhite"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/txt_st"
+            style="@style/Text_view_1.1"
+            android:text="Sync Time:"/>
+        <TextView
+            android:id="@+id/tvLastSyncTime"
+            style="@style/Text_view_2.2"
+            android:layout_toRightOf="@id/txt_st"
+            android:layout_alignBaseline="@id/txt_st"/>
+
+            <TextView
+                android:id="@+id/txt_ps"
+                style="@style/Text_view_1.1"
+                android:layout_below="@id/txt_st"
+                android:text="Synced Files:"/>
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tvNoOfFilesSynced"
+                android:layout_toRightOf="@id/txt_ps"
+                android:layout_alignBaseline="@id/txt_ps"
+                android:layout_below="@id/tvLastSyncTime"
+                style="@style/Text_view_2.2" />
+
+
+        <TextView
+            android:id="@+id/txt_sp"
+            style="@style/Text_view_1.1"
+            android:text="Sync Speed MB/s:"
+            android:layout_below="@id/txt_ps"/>
+        <TextView
+            android:id="@+id/tv_sync_speed"
+            style="@style/Text_view_2.2"
+            android:layout_toRightOf="@id/txt_sp"
+            android:layout_alignBaseline="@id/txt_sp"/>
+
+        <TextView
+            android:id="@+id/txt_gbs"
+            style="@style/Text_view_1.1"
+            android:text="GB Synced:"
+            android:layout_below="@id/txt_sp"/>
+        <TextView
+            android:id="@+id/tvSyncedDataAmount"
+            style="@style/Text_view_2.2"
+            android:layout_toRightOf="@id/txt_gbs"
+            android:layout_alignBaseline="@id/txt_gbs"/>
+        <Button
+            android:id="@+id/btnShare"
+            android:text="Share to Light Room"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rec_shape"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            android:layout_below="@id/txt_gbs"
+            android:layout_width="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:layout_height="30dp"/>
+
+
+        <!--< <Button
+         android:id="@+id/btnShare"
+         android:text="Share to Light Room"
+         android:layout_marginTop="5dp"
+         android:background="@drawable/rec_shape2"
+         android:textColor="@color/colorWhite"
+         android:textSize="14sp"
+         android:layout_alignBaseline="@id/txt_sp"
+         android:layout_width="wrap_content"
+         android:paddingLeft="7dp"
+         android:paddingRight="7dp"
+         android:layout_alignParentRight="true"
+         android:layout_height="30dp"/>  -->
+
+
+     </RelativeLayout>
+     </androidx.cardview.widget.CardView>
+
+
+
+
+ </RelativeLayout>
