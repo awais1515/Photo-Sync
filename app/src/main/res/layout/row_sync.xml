@@ -63,7 +63,7 @@
             android:layout_toRightOf="@id/txt_gbs"
             android:layout_alignBaseline="@id/txt_gbs"/>
         <Button
-            android:id="@+id/btnShare"
+            android:id="@+id/btnShareToLightRoom"
             android:text="Share to Light Room"
             android:layout_marginTop="5dp"
             android:background="@drawable/rec_shape"

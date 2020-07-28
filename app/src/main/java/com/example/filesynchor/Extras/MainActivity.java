@@ -11,14 +11,17 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.filesynchor.BottomSheet;
 import com.example.filesynchor.R;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,13 +29,12 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button btnNotification;
     TextView tvDeviceInfo,tvDirectories;
-
-
-
+    Button btnBSD;
+     BottomSheet bottomSheetDialog;
 
 
     @Override
@@ -42,18 +44,34 @@ public class MainActivity extends AppCompatActivity {
         btnNotification = findViewById(R.id.btn_notification);
         tvDeviceInfo = findViewById(R.id.tvDeviceInfo);
         tvDirectories = findViewById(R.id.tvDirectories);
+        btnBSD= findViewById(R.id.btn_bsd);
+
+        btnBSD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
+
 
         btnNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addNotification();
-                Toast.makeText(MainActivity.this,"Buttnon clicked",Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"Button clicked",Toast.LENGTH_LONG).show();
             }
         });
 
         loadDevicesInfo();
         listUSBDeices();
 
+
+
+    }
+
+    public void showDialog() {
+        bottomSheetDialog = new BottomSheet();
+        bottomSheetDialog.show(getSupportFragmentManager(),"dialog");
 
     }
 
@@ -127,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
             tvDirectories.setText(line+"\n\n\n");
         }
     }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+
+
+
    /* PendingIntent permissionIntent;
     //UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
     private static final String ACTION_USB_PERMISSION =

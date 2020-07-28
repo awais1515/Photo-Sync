@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Photo Sync</string>
+
+    <string-array name="sync_Time">
+        <item>0.05s></item>
+        <item>0.07s></item>
+        <item>0.06s></item>
+        <item>0.04s></item>
+        <item>0.09s></item>
+    </string-array>
+
+    <string-array name="synced_Files">
+        <item>5></item>
+        <item>7></item>
+        <item>11></item>
+        <item>12></item>
+        <item>6></item>
+    </string-array>
+
+    <string-array name="sync_Speed">
+        <item>45></item>
+        <item>55></item>
+        <item>38></item>
+        <item>24></item>
+        <item>12></item>
+    </string-array>
+
+    <string-array name="synced_GB">
+        <item>1></item>
+        <item>0.250></item>
+        <item>0.090></item>
+        <item>0.543></item>
+        <item>0.256></item>
+    </string-array>
+
 </resources>
