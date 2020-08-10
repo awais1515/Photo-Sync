@@ -33,16 +33,18 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".ActivityController" />
-        <activity android:name=".ActivityFileSyncController" />
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
-        <activity android:name=".Extras.Splash" />
-        <activity android:name=".Extras.MainActivity">
+        <activity android:name=".ActivityController">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ActivityFileSyncController" />
+        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+        <activity android:name=".Extras.Splash" />
+        <activity android:name=".Extras.MainActivity">
+
         </activity>
         <!--
 <receiver android:name=".BroadcastReceiverUSB">

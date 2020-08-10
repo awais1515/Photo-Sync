@@ -43,13 +43,30 @@ public class ActivityController extends AppCompatActivity {
     Intent serviceIntent;
     BroadcastReceiver localBroadCast;
     ProgressDialog progressDialog;
+    Button btnHistory;
+    BottomSheet bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
         init();
         clickListeners();
+        btnHistory= findViewById(R.id.btn_SyncHistory);
+
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
     }
+
+    public void showDialog() {
+        bottomSheetDialog = new BottomSheet();
+        bottomSheetDialog.show(getSupportFragmentManager(),"dialog");
+
+    }
+
     private void init(){
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -220,13 +237,13 @@ public class ActivityController extends AppCompatActivity {
     }
     private void loadSharedPreferenceData(){
         // Last Sync data
-        tvLastSyncTime.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_TIME,"NA"));
-        tvSyncedDataAmount.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,"NA"));
-        tvLastSyncStatus.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_STATUS,"NA"));
-        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,"NA"));
-        tvNoOFilesSkipped.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,"NA"));
-        tvSyncDuration.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DURATION,"NA"));
-        tvSyncSpeed.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SPEED,"NA"));
+        tvLastSyncTime.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_TIME,"7th August,2020 11:25:28"));
+        tvSyncedDataAmount.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,"5.7 GB"));
+        tvLastSyncStatus.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_STATUS,"Completed"));
+        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,"10"));
+        tvNoOFilesSkipped.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,"0"));
+        tvSyncDuration.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DURATION,"8 second"));
+        tvSyncSpeed.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SPEED,"36 Mb/s"));
         int filesReadyToShare = getFilesReadyToShare().size();
         tvReadyToShare.setText(filesReadyToShare+"");
         if(filesReadyToShare<=0)

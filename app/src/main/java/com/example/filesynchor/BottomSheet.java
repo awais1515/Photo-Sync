@@ -40,11 +40,11 @@ public class BottomSheet extends BottomSheetDialogFragment {
 
     private List<Data> loadDataIntoArrayList(List<Data> dataList) {
 
-        Data data1 = new Data("25th May,2019", 10, "10.7 GB", "Complete", "");
-        Data data2 = new Data("25th May,2019", 10, "10.7 GB", "Complete", "");
-        Data data3 = new Data("25th May,2019", 10, "10.7 GB", "Complete", "");
-        Data data4 = new Data("25th May,2019", 10, "10.7 GB", "Complete", "");
-        Data data5 = new Data("25th May,2019", 10, "10.7 GB", "Complete", "");
+        Data data1 = new Data("7th August,2020 11:25:28", 10, "5.7 GB", "Completed", "");
+        Data data2 = new Data("7th August,2020 09:20:10", 5, "3.7 GB", "Completed", "");
+        Data data3 = new Data("6th August,2020 01:35:08", 8, "4.5 GB", "Completed", "");
+        Data data4 = new Data("6th August,2020 17:45:46", 10, "5.2 GB", "Completed", "");
+        Data data5 = new Data("5th August,2020 23:22:35", 15, "9.1 GB", "Completed", "");
         dataList.add(data1);
         dataList.add(data2);
         dataList.add(data3);

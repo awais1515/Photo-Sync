@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnNotification;
     TextView tvDeviceInfo,tvDirectories;
-    Button btnBSD;
-     BottomSheet bottomSheetDialog;
+   // Button btnBSD;
+   //  BottomSheet bottomSheetDialog;
 
 
     @Override
@@ -44,14 +44,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnNotification = findViewById(R.id.btn_notification);
         tvDeviceInfo = findViewById(R.id.tvDeviceInfo);
         tvDirectories = findViewById(R.id.tvDirectories);
-        btnBSD= findViewById(R.id.btn_bsd);
+      //  btnBSD= findViewById(R.id.btn_bsd);
 
-        btnBSD.setOnClickListener(new View.OnClickListener() {
+       /* btnBSD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog();
             }
-        });
+        });*/
 
 
         btnNotification.setOnClickListener(new View.OnClickListener() {
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void showDialog() {
+  /*  public void showDialog() {
         bottomSheetDialog = new BottomSheet();
         bottomSheetDialog.show(getSupportFragmentManager(),"dialog");
 
-    }
+    }*/
 
     private void addNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MainActivity.this,"AWAIS")
