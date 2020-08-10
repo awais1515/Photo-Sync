@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -21,6 +24,7 @@ public class BottomSheet extends BottomSheetDialogFragment {
     RecyclerView recyclerView;
     AdapterSync adapterSync;
     private List<Data> dataList;
+    Button btnClear;
 
     @Nullable
     @Override
@@ -36,6 +40,8 @@ public class BottomSheet extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapterSync);
         return view;
+
+
     }
 
     private List<Data> loadDataIntoArrayList(List<Data> dataList) {

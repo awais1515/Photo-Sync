@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static com.example.filesynchor.App.TAG;
+import static com.example.filesynchor.BottomSheet.*;
 
 public class ActivityController extends AppCompatActivity {
     private static final int REQUEST_DIRECTORY = 4;
@@ -39,18 +42,28 @@ public class ActivityController extends AppCompatActivity {
             tvSyncedDataAmount,tvFolderPath,tvCopiedFilesCount,tvPercentage,tvCopying,
             tvCompleted,tvSyncDuration,tvSyncSpeed,tvReadyToShare;
     Button btnManualSync,btnAutoSync,btnChooseFolder,btnShare;
+    ImageView btnClear;
     ProgressBar progressBar;
     Intent serviceIntent;
     BroadcastReceiver localBroadCast;
     ProgressDialog progressDialog;
     Button btnHistory;
     BottomSheet bottomSheetDialog;
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
         init();
         clickListeners();
+       /* btnClear =(ImageView)findViewById(R.id.btn_clear);
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              bottomSheetDialog.dismiss();
+            }
+        });*/
+
         btnHistory= findViewById(R.id.btn_SyncHistory);
 
         btnHistory.setOnClickListener(new View.OnClickListener() {
@@ -357,5 +370,10 @@ public class ActivityController extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localBroadCast);
+    }
+
+
+    public void onClick(View view) {
+        bottomSheetDialog.dismiss();
     }
 }
