@@ -8,15 +8,15 @@ import android.os.Environment;
 public class SharedPref
 {
     private static SharedPreferences mSharedPref;
-    public static final String KEY_LAST_SYNC_TIME = "TIME";
-    public static final String KEY_LAST_SYNC_NO_OF_FILES = "NO_OF_FILES";
-    public static final String KEY_LAST_SYNC_SKIPPED_FILES = "SKIPPED_FILES";
-    public static final String KEY_LAST_SYNC_STATUS = "SYNC_STATUS";
-    public static final String KEY_LAST_SYNC_DATA_AMOUNT = "DATA_AMOUNT";
-    public static final String KEY_LAST_SYNC_FILE_PATHS = "FILE_PATHS";
-    public static final String KEY_LAST_SYNC_DURATION = "DURATION";
-    public static final String KEY_LAST_SYNC_SPEED = "SPEED";
-    public static final String KEY_DESTINATION_FOLDER = "DESTINATION_FOLDER";
+    public static final String KEY_LAST_SYNC_TIME = "KEY_TIME";
+    public static final String KEY_LAST_SYNC_NO_OF_FILES = "KEY_NO_OF_FILES";
+    public static final String KEY_LAST_SYNC_SKIPPED_FILES = "KEY_SKIPPED_FILES";
+    public static final String KEY_LAST_SYNC_STATUS = "KEY_SYNC_STATUS";
+    public static final String KEY_LAST_SYNC_DATA_AMOUNT = "KEY_DATA_AMOUNT";
+    public static final String KEY_LAST_SYNC_FILE_PATHS = "KEY_FILE_PATHS";
+    public static final String KEY_LAST_SYNC_DURATION = "KEY_DURATION";
+    public static final String KEY_LAST_SYNC_SPEED = "KEY_SPEED";
+    public static final String KEY_DESTINATION_FOLDER = "KEY_DESTINATION_FOLDER";
     public static final String DEFAULT_DESTINATION_FOLDER = Environment.getExternalStorageDirectory().getAbsolutePath()+"/AutoSync/";
 
     private SharedPref()

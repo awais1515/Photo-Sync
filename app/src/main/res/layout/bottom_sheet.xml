@@ -4,27 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".BottomSheet"
     >
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:padding="5dp">
         <TextView
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sync History"
             android:textSize="18sp"
             android:padding="5dp"
+            android:layout_marginLeft="8dp"
             android:textStyle="bold"
-           android:layout_centerHorizontal="true"/>
+           />
         <ImageView
             android:id="@+id/btn_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:visibility="gone"
             android:layout_marginRight="5dp"
             android:src="@drawable/ic_clear"
             android:onClick="onClick"
@@ -33,12 +36,44 @@
             tools:ignore="OnClick"
             />
 
-    </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/btn_synAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_sync"
+            android:background="@color/colorWhite"
+            tools:ignore="OnClick"
+            />
+
+        <ImageView
+            android:id="@+id/btn_deleteAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_delete"
+            android:background="@color/colorWhite"
+            android:layout_alignParentRight="true"
+            tools:ignore="OnClick"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_sync_not_found"
+        android:text="No Sync History Found"
+        android:gravity="center"
+        android:padding="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

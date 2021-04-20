@@ -1,8 +1,10 @@
 package com.example.filesynchor;
 
-import android.icu.text.DecimalFormat;
-import android.os.Environment;
 import android.util.Log;
+
+import com.example.filesynchor.Database.DataRepo;
+import com.example.filesynchor.FileManager.FileUtil;
+import com.example.filesynchor.FileManager.StorageDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,9 +19,9 @@ import static com.example.filesynchor.App.TAG;
 
 public class SyncFileUtility {
 
-    private static final String dstFolder = SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER);
-    private static final String rootFolder ="/storage/";
-    private static String sdCardPath;
+    //private static final String dstFolder = SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER);
+    //private static final String rootFolder ="/storage/";
+    private static String usbStoragPath;
     private static SyncProgress syncProgress;
     private static ArrayList<String> fileNames = new ArrayList<>();
     private static int totalFiles,copiedFiles,skippedFiles = 0;
@@ -28,7 +30,7 @@ public class SyncFileUtility {
     public  static void  syncFolder(SyncProgress syncProgress){
         SyncFileUtility.syncProgress = syncProgress;
         Log.d(TAG,"SyncFolder is called");
-        File directory = new File(dstFolder);
+        File directory = new File(getDestinationFolder());
         if(!directory.exists()){
             Log.d(TAG,"Directory Created");
             directory.mkdir();
@@ -37,19 +39,19 @@ public class SyncFileUtility {
         }
 
 
-        String sdCardPath = getSdCardStoragePath();
+        String usbStoragePath = getUSBStoragePath();
         if(isSourceReadable()){
             //before sync start
             totalFiles = 0;copiedFiles = 0;copiedBytes=0;skippedFiles=0;
             Date startTime = new Date();
             fileNames.clear();
-            countFiles(sdCardPath);
+            countFiles(usbStoragePath);
             App.showLog(totalFiles+"");
             if(totalFiles==0){
                 syncProgress.onProgressUpdate(copiedFiles,totalFiles);
             }else {
                 SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"");
-                copyFileOrDirectory(sdCardPath);
+                copyFileOrDirectory(usbStoragePath);
             }
             //after sync
             saveResult(startTime,copiedFiles,totalFiles,copiedBytes);
@@ -89,11 +91,19 @@ public class SyncFileUtility {
 
         /*if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();*/
-        File destFile = new File(dstFolder,sourceFile.getName());
+        File destFile = new File(getDestinationFolder(),sourceFile.getName());
         Log.d(TAG,"copy method called    source path: "+sourceFile.getAbsolutePath()+"  destination path: "+destFile.getAbsolutePath());
 
         if (!destFile.exists()||destFile.length()<sourceFile.length()) {
-            destFile.createNewFile();
+
+            boolean isCopied = FileUtil.copyFile(sourceFile,destFile);
+            if(isCopied){
+                copiedFiles++;
+                copiedBytes+=destFile.length();
+                syncProgress.onProgressUpdate(copiedFiles,totalFiles);
+                SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS, SharedPref.read(SharedPref.KEY_LAST_SYNC_FILE_PATHS, "") + destFile.getAbsolutePath() + "\n");
+            }
+           /* destFile.createNewFile();
             FileChannel source = null;
             FileChannel destination = null;
             try {
@@ -104,12 +114,12 @@ public class SyncFileUtility {
                 copiedFiles++;
                 copiedBytes+=destFile.length();
                 syncProgress.onProgressUpdate(copiedFiles,totalFiles);
-                /*final long blockSize = 2048;
+                *//*final long blockSize = 2048;
                 long position = 0;
                 while (destination.transferFrom(source, position, blockSize) > 0) {
                     destination.transferFrom(source,position,blockSize);
                     position += blockSize;
-                }*/
+                }*//*
 
                 //SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + 1);
                 //String fileNo = SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES, 0) + ") ";
@@ -121,14 +131,14 @@ public class SyncFileUtility {
                 if (destination != null) {
                     destination.close();
                 }
-            }
+            }*/
         }
 
     }
     public static boolean isSourceReadable(){
-        sdCardPath = getSdCardStoragePath();
-        if(sdCardPath!=null){
-            File file = new File(sdCardPath);
+        usbStoragPath = getUSBStoragePath();
+        if(usbStoragPath !=null){
+            File file = new File(usbStoragPath);
             if(file.exists())
                 if (file.isDirectory())
                     if(file.list()!=null){
@@ -138,8 +148,8 @@ public class SyncFileUtility {
 
         return false;
     }
-    public static String getSdCardStoragePath(){
-        File f = new File(rootFolder);
+    public static String getUSBStoragePath(){
+      /* File f = new File(rootFolder);
 
         // Exists or not
         String files="SD Card Content: "+f.getAbsolutePath()+"\n\n\n";
@@ -159,16 +169,22 @@ public class SyncFileUtility {
         else{
             Log.d(TAG,"Couldn't find Storage");
         }
-        return files;
+        return files;*/
+       return StorageDirectory.getUSBStoragePath()+"/";
 
     }
     private static void saveResult(Date startTime,int copiedFiles,int totalFiles,long copiedBytes){
+        Data data = new Data();
+        data.setPaths(SharedPref.read(SharedPref.KEY_LAST_SYNC_FILE_PATHS, ""));
         double syncDuration =getTimeDifference(startTime,new Date());
-        String timeStamp = new SimpleDateFormat("MMMM dd,yyyy HH:mm:ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("dd.MMMM  HH:mm:ss").format(new Date());
         Log.d(TAG,"Time Started Sync: "+timeStamp);
         SharedPref.write(SharedPref.KEY_LAST_SYNC_TIME,timeStamp);
+        data.setSyncTime(timeStamp);
         SharedPref.write(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,copiedFiles+"");
+        data.setSyncedFiles(copiedFiles);
         SharedPref.write(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,String.format("%.2f",(float)copiedBytes/1024/1024/1024) +" GB");
+        data.setSyncedGB(String.format("%.2f",(float)copiedBytes/1024/1024/1024) +" GB");
         SharedPref.write(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,skippedFiles+"");
         if(totalFiles==0){
             SharedPref.write(SharedPref.KEY_LAST_SYNC_SPEED,0+" Mb/s");
@@ -188,11 +204,16 @@ public class SyncFileUtility {
         }
 
         if(totalFiles==copiedFiles)
-        SharedPref.write(SharedPref.KEY_LAST_SYNC_STATUS,"Completed");
+        {
+            SharedPref.write(SharedPref.KEY_LAST_SYNC_STATUS,"Completed");
+            data.setStatus("Completed");
+        }
         else
+        {
             SharedPref.write(SharedPref.KEY_LAST_SYNC_STATUS,"Incomplete");
-
-
+            data.setStatus("Incomplete");
+        }
+        DataRepo.insertData(data);
 
     }
     private static void countFiles(String srcDir) {
@@ -212,7 +233,7 @@ public class SyncFileUtility {
                 if(src.getAbsolutePath().endsWith(".CR3"))
                     if(!src.isHidden())
                     {
-                        File dst = new File(dstFolder,src.getName());
+                        File dst = new File(getDestinationFolder(),src.getName());
                         if (!dst.exists()||dst.length()<src.length()){
                             if(!fileNames.contains(src.getName()))
                             {
@@ -229,7 +250,7 @@ public class SyncFileUtility {
 
             }
         } catch (Exception e) {
-            Log.d(TAG,"Source isn't a file or Directory...May be not available" + e.getMessage());
+            Log.d(TAG,"Source isn't a file or Directory...May be not available " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -253,5 +274,12 @@ public class SyncFileUtility {
             }
         }
     }
+
+    private static String getDestinationFolder(){
+        String dstFolder = SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER);
+        return dstFolder;
+    }
+
+
 
 }

@@ -11,17 +11,14 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.filesynchor.BottomSheet;
 import com.example.filesynchor.R;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;

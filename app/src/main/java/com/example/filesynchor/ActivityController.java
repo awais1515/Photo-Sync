@@ -4,19 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,22 +31,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.example.filesynchor.FileManager.FileUtil;
+import com.example.filesynchor.FileManager.StorageDirectory;
+
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.filesynchor.App.TAG;
-import static com.example.filesynchor.BottomSheet.*;
 
 public class ActivityController extends AppCompatActivity {
     private static final int REQUEST_DIRECTORY = 4;
+    private static final String INTERNAL_SHARED_STORAGE = "Internal shared storage";
     RelativeLayout rlProgressPanel;
     TextView
             tvLastSyncStatus,tvLastSyncTime,tvNoOFilesSynced,tvNoOFilesSkipped,
             tvSyncedDataAmount,tvFolderPath,tvCopiedFilesCount,tvPercentage,tvCopying,
-            tvCompleted,tvSyncDuration,tvSyncSpeed,tvReadyToShare;
+            tvCompleted,tvSyncDuration,tvSyncSpeed,tvReadyToShare,tvTotalFiles;
     Button btnManualSync,btnAutoSync,btnChooseFolder,btnShare;
     ImageView btnClear;
     ProgressBar progressBar;
@@ -49,13 +64,18 @@ public class ActivityController extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button btnHistory;
     BottomSheet bottomSheetDialog;
+    private Context mainActivity;
+    private SharedPreferences sharedPrefs;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
+        mainActivity = this;
         init();
         clickListeners();
+        showAllStorage();
        /* btnClear =(ImageView)findViewById(R.id.btn_clear);
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,16 +95,20 @@ public class ActivityController extends AppCompatActivity {
     }
 
     public void showDialog() {
-        bottomSheetDialog = new BottomSheet();
+       bottomSheetDialog = new BottomSheet();
         bottomSheetDialog.show(getSupportFragmentManager(),"dialog");
+      /* Intent intent = new Intent(this,ActivitySyncHistory.class);
+       startActivity(intent);*/
 
     }
 
     private void init(){
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Syncing Data");
         //shared preferences items for last sync
+        tvTotalFiles = findViewById(R.id.tvTotalFiles);
         tvLastSyncStatus = findViewById(R.id.tv_status);
         tvLastSyncTime = findViewById(R.id.tvLastSyncTime);
         tvNoOFilesSynced = findViewById(R.id.tvNoOfFilesSynced);
@@ -110,6 +134,7 @@ public class ActivityController extends AppCompatActivity {
         tvSyncSpeed = findViewById(R.id.tv_sync_speed);
         progressBar = findViewById(R.id.probar);
     }
+
     private void clickListeners(){
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,17 +193,7 @@ public class ActivityController extends AppCompatActivity {
         btnChooseFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isStoragePermissionGranted()){
-                    final Intent chooserIntent = new Intent(ActivityController.this, DirectoryChooserActivity.class);
-                    final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                            .newDirectoryName("DirChooserSample")
-                            .allowReadOnlyDirectory(true)
-                            .allowNewDirectoryNameModification(true)
-                            .build();
-                    // REQUEST_DIRECTORY is a constant integer to identify the request, e.g. 0
-                    chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-                    startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
-                }
+                selectTargetFolder();
             }
         });
         localBroadCast = new BroadcastReceiver() {
@@ -247,16 +262,22 @@ public class ActivityController extends AppCompatActivity {
             rlProgressPanel.setVisibility(View.VISIBLE);
         }
 
+
     }
+
     private void loadSharedPreferenceData(){
         // Last Sync data
-        tvLastSyncTime.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_TIME,"7th August,2020 11:25:28"));
-        tvSyncedDataAmount.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,"5.7 GB"));
-        tvLastSyncStatus.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_STATUS,"Completed"));
-        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,"10"));
-        tvNoOFilesSkipped.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,"0"));
-        tvSyncDuration.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DURATION,"8 second"));
-        tvSyncSpeed.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SPEED,"36 Mb/s"));
+        File file = new File(SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,""));
+        if(file.exists()&&file.listFiles()!=null)
+            tvTotalFiles.setText(file.listFiles().length+"");
+        else tvTotalFiles.setText("0");
+        tvLastSyncTime.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_TIME,""));
+        tvSyncedDataAmount.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DATA_AMOUNT,""));
+        tvLastSyncStatus.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_STATUS,""));
+        tvNoOFilesSynced.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,""));
+        tvNoOFilesSkipped.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SKIPPED_FILES,""));
+        tvSyncDuration.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_DURATION,""));
+        tvSyncSpeed.setText(SharedPref.read(SharedPref.KEY_LAST_SYNC_SPEED,""));
         int filesReadyToShare = getFilesReadyToShare().size();
         tvReadyToShare.setText(filesReadyToShare+"");
         if(filesReadyToShare<=0)
@@ -266,12 +287,15 @@ public class ActivityController extends AppCompatActivity {
         //Destination Folder
         tvFolderPath.setText(SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER));
     }
+
     private void setBtnAutoSyncOnGui(){
         btnAutoSync.setBackground(getDrawable(R.drawable.rec_shape2));
     }
+
     private void setBtnAutoSyncOFFGui(){
         btnAutoSync.setBackground(getDrawable(R.drawable.rec_shape));
     }
+
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -289,6 +313,7 @@ public class ActivityController extends AppCompatActivity {
             return true;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -296,6 +321,24 @@ public class ActivityController extends AppCompatActivity {
             if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                 SharedPref.write(SharedPref.KEY_DESTINATION_FOLDER,data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR));
                tvFolderPath.setText(data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR));
+            }
+        }
+        else if (requestCode == 3) {
+            Uri treeUri;
+            if (resultCode == Activity.RESULT_OK) {
+                // Get Uri from Storage Access Framework.
+                treeUri = data.getData();
+                // Persist URI - this is required for verification of writability.
+                if (treeUri != null)
+                    sharedPrefs
+                            .edit()
+                            .putString("URI", treeUri.toString())
+                            .commit();
+            } else {
+                // If not confirmed SAF, or if still not writable, then revert settings.
+        /* DialogUtil.displayError(getActivity(), R.string.message_dialog_cannot_write_to_folder_saf, false, currentFolder);
+        ||!FileUtil.isWritableNormalOrSaf(currentFolder)*/
+                return;
             }
         }
     }
@@ -328,22 +371,21 @@ public class ActivityController extends AppCompatActivity {
             intent.setType("image/jpeg"); /* This example is sharing jpeg images. */
             intent.setPackage("com.adobe.lrmobile");
 
-            ArrayList<Uri> files = new ArrayList<Uri>();
+            ArrayList<Uri> filesUris = new ArrayList<Uri>();
 
             for(String path : syncedFiles /* List of the files you want to send */) {
               File file = new File(path);
                 if(file.exists()){
                     Uri uri = FileProvider.getUriForFile(this, "com.example.filesynchor.provider",file);
-                    files.add(uri);
+                    filesUris.add(uri);
                 }
-
             }
-            Log.d("abc","no of files "+files.size()+"");
+            Log.d("abc","no of files "+filesUris.size()+"");
 
             Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.adobe.lrmobile");
             //startActivity( launchIntent );
 
-            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesUris);
             // SharedPref.write(SharedPref.KEY_LAST_SYNC_FILE_PATHS,"");
            // startActivity(intent);
             startActivities(new Intent[]{launchIntent,intent});
@@ -353,10 +395,6 @@ public class ActivityController extends AppCompatActivity {
         else {
             Toast.makeText(this,"Destination Folder doesn't exist",Toast.LENGTH_LONG).show();
         }
-
-
-
-
     }
 
     @Override
@@ -372,8 +410,113 @@ public class ActivityController extends AppCompatActivity {
         unregisterReceiver(localBroadCast);
     }
 
-
     public void onClick(View view) {
         bottomSheetDialog.dismiss();
     }
+
+    private void selectTargetFolder(){
+        if(isStoragePermissionGranted()){
+            if(StorageDirectory.isSDCardAvailable()){
+                final Dialog dialog = new Dialog(this,R.style.Theme_Dialog);
+                dialog.setContentView(R.layout.choose_directory_dialog);
+                Button btnPhoneStorage = (Button) dialog.findViewById(R.id.btn_phone_storage);
+                Button btnSdCard = (Button) dialog.findViewById(R.id.btn_sd_card);
+                btnPhoneStorage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchFolderSelectionActivity(StorageDirectory.getInternalStoragePath());
+                        dialog.dismiss();
+                    }
+                });
+                btnSdCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        File folder = new File (StorageDirectory.getSDCardPath());
+                        if (!FileUtil.isWritableNormalOrSaf(folder, mainActivity)) {
+                            guideDialogForLEXA(folder.getAbsolutePath());
+                        }
+                        else {
+                            launchFolderSelectionActivity(StorageDirectory.getSDCardPath());
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+            else {
+                launchFolderSelectionActivity(StorageDirectory.getInternalStoragePath());
+            }
+        }
+    }
+
+    private void launchFolderSelectionActivity(String initialDirectory){
+        if(isStoragePermissionGranted()){
+            final Intent chooserIntent = new Intent(ActivityController.this, DirectoryChooserActivity.class);
+            final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+                    .newDirectoryName("DirChooserSample")
+                    .allowReadOnlyDirectory(true)
+                    .allowNewDirectoryNameModification(true)
+                    .initialDirectory(initialDirectory)
+                    .build();
+            chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+        }
+    }
+
+    public void guideDialogForLEXA(String path) {
+        final MaterialDialog.Builder x = new MaterialDialog.Builder(mainActivity);
+        x.theme(Theme.LIGHT);
+        x.title(R.string.needs_access);
+        LayoutInflater layoutInflater =
+                (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.lexadrawer, null);
+        x.customView(view, true);
+        // textView
+        TextView textView = view.findViewById(R.id.description);
+        textView.setText(
+                mainActivity.getString(R.string.needs_access_summary)
+                        + path
+                        + mainActivity.getString(R.string.needs_access_summary1));
+        ((ImageView) view.findViewById(R.id.icon)).setImageResource(R.drawable.ic_sd_card_48);
+        x.positiveText(R.string.open)
+                .negativeText(R.string.cancel)
+                .positiveColor(getColor(R.color.bright_blue))
+                .negativeColor(getColor(R.color.bright_blue))
+                .onPositive((dialog, which) -> triggerStorageAccessFramework())
+                .onNegative(
+                        (dialog, which) ->
+                                Toast.makeText(mainActivity, R.string.error, Toast.LENGTH_SHORT).show());
+        final MaterialDialog y = x.build();
+        y.show();
+    }
+
+    private void triggerStorageAccessFramework() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        startActivityForResult(intent, 3);
+    }
+
+    private void showAllStorage(){
+        List<StorageDirectory> directoryParcelableList = StorageDirectory.getStorageDirectoriesNew();
+        for(StorageDirectory directory:directoryParcelableList){
+            Log.d("abc",directory.toString());
+        }
+       /* File targetFile = new File(StorageDirectory.getSDCardPath()+"/story1.txt");
+        File sourceFile = new File(StorageDirectory.getInternalStoragePath()+"/story1.txt");
+        boolean result = FileUtil.copyFile(sourceFile,targetFile);
+
+        if(result){
+            App.showToast("Successfully Copied");
+            App.showLog("length: "+targetFile.length());
+        }
+        else {
+            App.showToast("Failed to copy");
+        }*/
+
+
+    }
+
+
+
+
+
 }

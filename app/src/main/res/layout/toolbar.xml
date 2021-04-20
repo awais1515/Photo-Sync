@@ -11,6 +11,6 @@
         android:textStyle="bold"
         android:textColor="#fff"
         android:layout_marginLeft="15dp"
-        android:text="Photo Sync"
+        android:text="@string/app_name"
         android:layout_height="wrap_content"/>
 </LinearLayout>

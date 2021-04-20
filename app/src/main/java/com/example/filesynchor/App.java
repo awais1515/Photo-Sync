@@ -6,22 +6,25 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.filesynchor.Database.DatabaseHelper;
+import com.example.filesynchor.Database.DatabaseManager;
+
 public class App extends Application {
-    public static final String TAG = "abcd";
+    public static final String TAG = "abc";
     public static final String CHANNEL_ID = "exampleServiceChannel";
     private static Context context;
+    private static DatabaseHelper dbHelper;
     @Override
     public void onCreate() {
         super.onCreate();
         App.context = this;
         SharedPref.init(this);
         createNotificationChannel();
-        /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());*/
+        dbHelper = new DatabaseHelper();
+        DatabaseManager.initializeInstance(dbHelper);
     }
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -53,6 +56,10 @@ public class App extends Application {
     }
     public static void showLog(String message){
         Log.d(TAG,message);
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
 }

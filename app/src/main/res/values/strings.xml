@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Photo Sync</string>
+    <string name="app_name">Photo Sync 9.0</string>
 
     <string-array name="sync_Time">
         <item>0.05s></item>
@@ -32,5 +32,13 @@
         <item>0.543></item>
         <item>0.256></item>
     </string-array>
+
+    <string name="storage_internal">Internal Storage</string>
+    <string name="needs_access">Write Access Required</string>
+    <string name="needs_access_summary">Please choose the root directory of \t</string>
+    <string name="needs_access_summary1">\tto grant write access to operate </string>
+    <string name="open">Open</string>
+    <string name="cancel">CANCEL</string>
+    <string name="error">Error</string>
 
 </resources>

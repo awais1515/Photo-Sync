@@ -13,24 +13,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-
         android:padding="15dp">
 
-        <Button
-            android:id="@+id/btn_SyncHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/ic_history"
-            android:drawablePadding="10dp"
-            android:padding="5dp"
-            android:text="Sync History"
-            android:textAllCaps="false"
-            />
+        <LinearLayout
+            android:id="@+id/lltop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+
+                    android:id="@+id/txt_total_files"
+                    style="@style/Text_view_1"
+                    android:text="Total Files:"/>
+                <TextView
+                    android:textColor="#5C5C5C"
+                    android:id="@+id/tvTotalFiles"
+                    style="@style/Text_view_2"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_SyncHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/ic_history"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Sync History"
+                android:textAllCaps="false"
+                />
+
+
+        </LinearLayout>
+
+
         <TextView
             android:id="@+id/txt_st"
             style="@style/Text_view_1"
-            android:layout_below="@id/btn_SyncHistory"
+            android:layout_below="@id/lltop"
 
             android:text="Sync Time:"/>
         <TextView
@@ -119,6 +147,7 @@
             android:layout_alignBaseline="@id/txt_sf"/>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/ll5"
             android:gravity="center"
             android:layout_below="@id/txt_sf"
@@ -210,7 +239,7 @@
                 android:textColor="@color/colorTxt1"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:text="+649761762740"
                 android:layout_centerHorizontal="true"/>
             <Button

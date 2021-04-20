@@ -1,19 +1,11 @@
 package com.example.filesynchor;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import static com.example.filesynchor.App.TAG;
 
