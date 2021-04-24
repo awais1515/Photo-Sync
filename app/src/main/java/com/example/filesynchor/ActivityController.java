@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import abhishekti7.unicorn.filepicker.UnicornFilePicker;
+import abhishekti7.unicorn.filepicker.utils.Constants;
 
 import static com.example.filesynchor.App.TAG;
 
@@ -341,6 +345,12 @@ public class ActivityController extends AppCompatActivity {
                 return;
             }
         }
+        else if (requestCode == Constants.REQ_UNICORN_FILE && resultCode == RESULT_OK) {
+            ArrayList<String> files = data.getStringArrayListExtra("filePaths");
+            String path = files.get(0);
+            SharedPref.write(SharedPref.KEY_DESTINATION_FOLDER,path);
+            tvFolderPath.setText(path);
+        }
     }
 
     private ArrayList<String> getFilesReadyToShare(){
@@ -451,7 +461,7 @@ public class ActivityController extends AppCompatActivity {
 
     private void launchFolderSelectionActivity(String initialDirectory){
         if(isStoragePermissionGranted()){
-            final Intent chooserIntent = new Intent(ActivityController.this, DirectoryChooserActivity.class);
+           /* final Intent chooserIntent = new Intent(ActivityController.this, DirectoryChooserActivity.class);
             final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
                     .newDirectoryName("DirChooserSample")
                     .allowReadOnlyDirectory(true)
@@ -459,7 +469,18 @@ public class ActivityController extends AppCompatActivity {
                     .initialDirectory(initialDirectory)
                     .build();
             chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);*/
+
+            UnicornFilePicker.from(ActivityController.this)
+                    .addConfigBuilder()
+                    .selectMultipleFiles(false)
+                    .showOnlyDirectory(true)
+                    .setRootDirectory(initialDirectory)
+                    .showHiddenFiles(false)
+                    .addItemDivider(true)
+                    .theme(R.style.UnicornFilePicker_Default)
+                    .build()
+                    .forResult(Constants.REQ_UNICORN_FILE);
         }
     }
 
