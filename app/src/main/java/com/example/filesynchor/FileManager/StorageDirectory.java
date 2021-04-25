@@ -173,12 +173,13 @@ public class StorageDirectory implements Parcelable {
   }
 
   public static String getUSBStoragePath(){
-    List<StorageDirectory> directoryList = getStorageDirectoriesNew();
+   List<StorageDirectory> directoryList = getStorageDirectoriesNew();
     for(StorageDirectory directory:directoryList){
       if(directory.type==USB_STORAGE)
         return directory.path;
     }
     return null;
+    //return getInternalStoragePath();
   }
 
   public static String getInternalStoragePath(){

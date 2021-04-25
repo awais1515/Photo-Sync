@@ -56,7 +56,8 @@ public class AdapterSync extends RecyclerView.Adapter<AdapterSync.MyViewHolder> 
             holder.shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shareToLightRoom(data.getPaths());
+                   // shareToLightRoom(data.getPaths());
+                    App.showToast("Share to light room is disabled temporarily");
                 }
             });
         }

@@ -209,7 +209,7 @@ public class ActivityController extends AppCompatActivity {
                     loadSharedPreferenceData();
                     String fileSynced = SharedPref.read(SharedPref.KEY_LAST_SYNC_NO_OF_FILES,"0");
                     if(!fileSynced.equals("0")){
-                        shareToLightRoom();
+                       shareToLightRoom();
                     }
                 }
                 if(intent.getAction().equals(LocalBroadcast.ACTION_MESSAGE_UPDATE)){
@@ -369,7 +369,8 @@ public class ActivityController extends AppCompatActivity {
     }
 
     private void shareToLightRoom(){
-        File destinationFolder = new File(SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER));
+        App.showToast("Share to Light room is turned off temporarily");
+        /*File destinationFolder = new File(SharedPref.read(SharedPref.KEY_DESTINATION_FOLDER,SharedPref.DEFAULT_DESTINATION_FOLDER));
         Log.d("abc",destinationFolder.getAbsolutePath());
         if(destinationFolder.exists()){
             // File destinationFolder = new File(tvFolderPath.getText().toString());
@@ -378,12 +379,12 @@ public class ActivityController extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             intent.putExtra(Intent.EXTRA_SUBJECT, "CR3 files.");
-            intent.setType("image/jpeg"); /* This example is sharing jpeg images. */
+            intent.setType("image/jpeg"); *//* This example is sharing jpeg images. *//*
             intent.setPackage("com.adobe.lrmobile");
 
             ArrayList<Uri> filesUris = new ArrayList<Uri>();
 
-            for(String path : syncedFiles /* List of the files you want to send */) {
+            for(String path : syncedFiles *//* List of the files you want to send *//*) {
               File file = new File(path);
                 if(file.exists()){
                     Uri uri = FileProvider.getUriForFile(this, "com.example.filesynchor.provider",file);
@@ -404,7 +405,7 @@ public class ActivityController extends AppCompatActivity {
         }
         else {
             Toast.makeText(this,"Destination Folder doesn't exist",Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     @Override

@@ -59,7 +59,8 @@ public class BottomSheet extends BottomSheetDialogFragment {
         btnSyncAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareAllFilesToLightRoom();
+               // shareAllFilesToLightRoom();
+                App.showToast("Share to light room is disabled temporarily");
             }
         });
         btnDeleteAll.setOnClickListener(new View.OnClickListener() {
